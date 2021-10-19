@@ -6,14 +6,13 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Animator animator;
-    private Rigidbody2D body;
     private Vector2 direction;
+    private Rigidbody2D rigidBody2D;
     public float movementSpeed = 10f;
 
     void Start() {
         animator = GetComponent<Animator>();
-        body = GetComponent<Rigidbody2D>();
-        body.isKinematic = true;
+        rigidBody2D = GetComponent<Rigidbody2D>();
     }
 
     void updateDirection(Vector2 newDirection) {
@@ -47,17 +46,13 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float newXSpeed = Input.GetAxis("Horizontal");
-        float newYSpeed = Input.GetAxis("Vertical");
+        float horizontalMovement = Input.GetAxisRaw("Horizontal");
+        float verticalMovement = Input.GetAxisRaw("Vertical");
 
-        Vector2 nonNormalized = new Vector2(newXSpeed, newYSpeed);
-        Vector2 newDirection = nonNormalized.normalized;
+        Vector2 movement = new Vector2(horizontalMovement, verticalMovement);
 
-        if (newDirection != direction) {
-            updateDirection(newDirection);
-        }
+        updateDirection(movement.normalized);
 
-        Vector2 translation = newDirection * movementSpeed * Time.deltaTime;
-        transform.position += new Vector3(translation.x, translation.y, 0);
+        rigidBody2D.MovePosition(rigidBody2D.position + (movement * movementSpeed));
     }
 }
