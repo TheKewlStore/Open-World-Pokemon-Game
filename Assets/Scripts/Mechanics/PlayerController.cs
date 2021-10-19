@@ -7,12 +7,14 @@ public class PlayerController : MonoBehaviour
 {
     private Animator animator;
     private Vector2 direction;
+    private Vector2 boxSize;
     private Rigidbody2D rigidBody2D;
     public float movementSpeed = 10f;
 
     void Start() {
         animator = GetComponent<Animator>();
         rigidBody2D = GetComponent<Rigidbody2D>();
+        boxSize = new Vector2(0.1f, 1f);
     }
 
     void updateDirection(Vector2 newDirection) {
@@ -46,6 +48,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Movement
         float horizontalMovement = Input.GetAxisRaw("Horizontal");
         float verticalMovement = Input.GetAxisRaw("Vertical");
 
@@ -54,5 +57,25 @@ public class PlayerController : MonoBehaviour
         updateDirection(movement.normalized);
 
         rigidBody2D.MovePosition(rigidBody2D.position + (movement * movementSpeed));
+
+        //Interaction
+        if(Input.GetKeyDown(KeyCode.E))
+            CheckInteraction();
     }
+
+    private void CheckInteraction()
+    {
+        RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position, boxSize, 0, Vector2.zero);
+
+        if(hits.Length > 0)
+        {
+            foreach(RaycastHit2D rc in hits)
+            {
+                if (rc.IsInteractable())
+                {
+                    rc.Interact();
+                }
+            }
+        }
+    }    
 }
