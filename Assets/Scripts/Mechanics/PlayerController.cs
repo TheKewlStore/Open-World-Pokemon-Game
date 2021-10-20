@@ -8,9 +8,11 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private Vector2 direction;
     private Vector2 boxSize;
+    private Vector2 facingDirection;
     private Rigidbody2D rigidBody2D;
-    public float movementSpeed = 10f;
+    private Interactable currentInteractable;
 
+    public float movementSpeed = 10f;
     void Start() {
         animator = GetComponent<Animator>();
         rigidBody2D = GetComponent<Rigidbody2D>();
@@ -21,6 +23,11 @@ public class PlayerController : MonoBehaviour
         Vector2 previousDirection = this.direction;
         this.direction = newDirection;
         updateAnimator(previousDirection);
+
+        if(!newDirection.Equals(Vector2.zero))
+        {
+            facingDirection = newDirection;
+        }
     }
     
     void updateAnimator(Vector2 previousDirection) {
@@ -60,22 +67,49 @@ public class PlayerController : MonoBehaviour
 
         //Interaction
         if(Input.GetKeyDown(KeyCode.E))
-            CheckInteraction();
-    }
-
-    private void CheckInteraction()
-    {
-        RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position, boxSize, 0, Vector2.zero);
-
-        if(hits.Length > 0)
         {
-            foreach(RaycastHit2D rc in hits)
+            if(currentInteractable)
             {
-                if (rc.IsInteractable())
-                {
-                    rc.Interact();
-                }
+                FindObjectOfType<DialogManager>().DisplayNextSentence();
+            } else 
+            {                
+                CheckForInteraction();
             }
         }
-    }    
+    }
+
+    private void CheckForInteraction()
+    {
+        RaycastHit2D raycastHit = DoInteractRaycast();
+        if(raycastHit.collider != null)
+        {
+            currentInteractable = raycastHit.IsInteractable();
+            if(currentInteractable)
+            {
+                currentInteractable.Interact();
+            }
+        }
+    }
+
+    private RaycastHit2D DoInteractRaycast()
+    {        
+        Vector2 spriteForwardVector = new Vector2();
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+
+        if (facingDirection == Vector2.up) 
+        {
+            spriteForwardVector = new Vector2(transform.position.x, transform.position.y + sprite.bounds.extents.y);
+        } else if (facingDirection == Vector2.left) 
+        {
+            spriteForwardVector = new Vector2(transform.position.x + -sprite.bounds.extents.x, transform.position.y);
+        } else if (facingDirection == Vector2.down) 
+        {
+            spriteForwardVector = new Vector2(transform.position.x, transform.position.y + -sprite.bounds.extents.y);
+        } else if (facingDirection == Vector2.right)  
+        {
+            spriteForwardVector = new Vector2(transform.position.x + sprite.bounds.extents.x, transform.position.y);
+        }        
+
+        return Physics2D.Raycast(spriteForwardVector, facingDirection, 5.0f);;
+    }
 }

@@ -327,6 +327,8 @@ GameObject:
   - component: {fileID: 1781926931}
   - component: {fileID: 1781926930}
   - component: {fileID: 1781926929}
+  - component: {fileID: 1781926933}
+  - component: {fileID: 1781926934}
   m_Layer: 0
   m_Name: 009s_0_0
   m_TagString: Untagged
@@ -346,6 +348,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3753cfcce778af943ac2303cb3452f37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dialogTrigger: {fileID: 1781926933}
+  dialogManager: {fileID: 0}
 --- !u!61 &1781926930
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -437,6 +441,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1781926933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1781926928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dae36f3e6d649e740ad3c7b422d4adb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialog:
+    name: Shiny Blastoise
+    sentences:
+    - Look at me I'm Shiny Blastoise
+    - Gaze upon my rarity
+    - Alright move along kid
+--- !u!114 &1781926934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1781926928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b768467dffa17048822ac1dc5ccfcbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1977655695
 GameObject:
   m_ObjectHideFlags: 0
