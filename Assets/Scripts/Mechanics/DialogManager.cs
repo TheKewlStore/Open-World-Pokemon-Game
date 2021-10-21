@@ -1,19 +1,21 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class DialogManager : MonoBehaviour
 {
     private Queue<string> sentences;
+    public Label nameText;
+    public Label dialogText;
     void Start()
     {
         sentences = new Queue<string>();
+        
     }
 
     public void StartDialog(Dialog dialog)
     {
-        Debug.Log($"Starting conversation with {dialog.name}");
+        nameText.text = dialog.name;
 
         sentences.Clear();
 
@@ -34,7 +36,7 @@ public class DialogManager : MonoBehaviour
         }
 
         string sentence = sentences.Dequeue();
-        Debug.Log(sentence);
+        dialogText.text = sentence;
     }
 
     private void EndDialog()
