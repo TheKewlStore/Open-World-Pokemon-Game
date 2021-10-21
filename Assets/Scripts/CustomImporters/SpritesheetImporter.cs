@@ -1,14 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
 using UnityEditor;
 using UnityEditor.AssetImporters;
-
+using UnityEngine;
 
 [ScriptedImporter(1, "spritesheet")]
-public class SpritesheetImporter : ScriptedImporter
-{
+public class SpritesheetImporter : ScriptedImporter {
     public override void OnImportAsset(AssetImportContext context) {
         string spriteName = Path.GetFileNameWithoutExtension(context.assetPath);
         Texture2D texture = new Texture2D(0, 0);
@@ -30,11 +28,14 @@ public class SpritesheetImporter : ScriptedImporter
 
             if (row == 0) {
                 direction = "south";
-            } else if (row == 1) {
+            }
+            else if (row == 1) {
                 direction = "west";
-            } else if (row == 2) {
+            }
+            else if (row == 2) {
                 direction = "east";
-            } else if (row == 3) {
+            }
+            else if (row == 3) {
                 direction = "north";
             }
 
