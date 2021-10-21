@@ -11,8 +11,11 @@ public class PlayerController : MonoBehaviour
     private Vector2 facingDirection;
     private Rigidbody2D rigidBody2D;
     private Interactable currentInteractable;
+    private SpriteRenderer spriteRenderer;
 
     public float movementSpeed = 10f;
+    public Sprite sprite;
+
     void Start() {
         animator = GetComponent<Animator>();
         rigidBody2D = GetComponent<Rigidbody2D>();
@@ -66,7 +69,9 @@ public class PlayerController : MonoBehaviour
         rigidBody2D.MovePosition(rigidBody2D.position + (movement * movementSpeed));
 
         //Interaction
-        if(Input.GetKeyDown(KeyCode.E))
+        // Use GetButtonDown() instead: https://docs.unity3d.com/ScriptReference/Input.html
+        // This will allow us more configuration of input using the Unity project settings.
+        if(Input.GetButtonDown("Submit"))
         {
             if(currentInteractable)
             {
