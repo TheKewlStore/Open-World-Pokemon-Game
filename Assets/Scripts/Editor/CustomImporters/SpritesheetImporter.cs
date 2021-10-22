@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Cinemachine;
+using GitMerge;
 using UnityEditor;
 using UnityEditor.AssetImporters;
 using UnityEngine;
@@ -60,11 +62,14 @@ public class SpritesheetImporter : ScriptedImporter {
             }
 
             AnimationUtility.SetObjectReferenceCurve(clip, spriteBinding, spriteKeyFrames);
-            // context.AddObjectToAsset(spriteName + "_" + direction + "_animationBinding", spriteBinding);
+
             string clipName = spriteName + "_" + direction + "_animation";
             clip.name = clipName;
             Debug.Log(clip.length);
             context.AddObjectToAsset(clipName, clip);
+
+            Animator animator = new Animator();
+            GameObject characterObject = new GameObject();
         }
     }
 }
