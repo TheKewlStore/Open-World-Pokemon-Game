@@ -5,52 +5,55 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private Animator animator;
-    private Vector2 direction;
-    private Vector2 boxSize;
-    private Vector2 facingDirection;
-    private Rigidbody2D rigidBody2D;
-    private Interactable currentInteractable;
-    private SpriteRenderer spriteRenderer;
+    [SerializeField] private DialogUi _dialogUi;
+
+    private Animator _animator;
+    private Vector2 _direction;
+    private Vector2 _boxSize;
+    private Vector2 _facingDirection;
+    private Rigidbody2D _rigidBody2D;
+    private SpriteRenderer _spriteRenderer;
 
     public float movementSpeed = 10f;
     public Sprite sprite;
+    public DialogUi DialogUi => _dialogUi;
+    public IInteractable Interactable { get; set; }
 
     void Start() {
-        animator = GetComponent<Animator>();
-        rigidBody2D = GetComponent<Rigidbody2D>();
-        boxSize = new Vector2(0.1f, 1f);
+        _animator = GetComponent<Animator>();
+        _rigidBody2D = GetComponent<Rigidbody2D>();
+        _boxSize = new Vector2(0.1f, 1f);
     }
 
     void updateDirection(Vector2 newDirection) {
-        Vector2 previousDirection = this.direction;
-        this.direction = newDirection;
+        Vector2 previousDirection = this._direction;
+        this._direction = newDirection;
         updateAnimator(previousDirection);
 
         if(!newDirection.Equals(Vector2.zero))
         {
-            facingDirection = newDirection;
+            _facingDirection = newDirection;
         }
     }
     
     void updateAnimator(Vector2 previousDirection) {
-        if (direction == Vector2.up) {
-            animator.Play("base.walking_north");
-        } else if (direction == Vector2.left) {
-            animator.Play("base.walking_west");
-        } else if (direction == Vector2.down) {
-            animator.Play("base.walking_south");
-        } else if (direction == Vector2.right) {
-            animator.Play("base.walking_east");
-        } else if (direction == Vector2.zero) {
+        if (_direction == Vector2.up) {
+            _animator.Play("base.walking_north");
+        } else if (_direction == Vector2.left) {
+            _animator.Play("base.walking_west");
+        } else if (_direction == Vector2.down) {
+            _animator.Play("base.walking_south");
+        } else if (_direction == Vector2.right) {
+            _animator.Play("base.walking_east");
+        } else if (_direction == Vector2.zero) {
             if (previousDirection == Vector2.up) {
-                animator.Play("base.idle_north");
+                _animator.Play("base.idle_north");
             } else if (previousDirection == Vector2.left) {
-                animator.Play("base.idle_west");
+                _animator.Play("base.idle_west");
             } else if (previousDirection == Vector2.down) {
-                animator.Play("base.idle_south");
+                _animator.Play("base.idle_south");
             } else if (previousDirection == Vector2.right) {
-                animator.Play("base.idle_east");
+                _animator.Play("base.idle_east");
             }
         }
     }
@@ -58,6 +61,10 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (DialogUi.IsOpen)
+        {
+            return;
+        }
         //Movement
         float horizontalMovement = Input.GetAxisRaw("Horizontal");
         float verticalMovement = Input.GetAxisRaw("Vertical");
@@ -66,55 +73,14 @@ public class PlayerController : MonoBehaviour
 
         updateDirection(movement.normalized);
 
-        rigidBody2D.MovePosition(rigidBody2D.position + (movement * movementSpeed));
+        _rigidBody2D.MovePosition(_rigidBody2D.position + (movement * movementSpeed));
 
         //Interaction
         // Use GetButtonDown() instead: https://docs.unity3d.com/ScriptReference/Input.html
         // This will allow us more configuration of input using the Unity project settings.
         if(Input.GetButtonDown("Submit"))
         {
-            if(currentInteractable)
-            {
-                FindObjectOfType<DialogManager>().DisplayNextSentence();
-            } else 
-            {                
-                CheckForInteraction();
-            }
+            Interactable?.Interact(this);
         }
-    }
-
-    private void CheckForInteraction()
-    {
-        RaycastHit2D raycastHit = DoInteractRaycast();
-        if(raycastHit.collider != null)
-        {
-            currentInteractable = raycastHit.IsInteractable();
-            if(currentInteractable)
-            {
-                currentInteractable.Interact();
-            }
-        }
-    }
-
-    private RaycastHit2D DoInteractRaycast()
-    {        
-        Vector2 spriteForwardVector = new Vector2();
-        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-
-        if (facingDirection == Vector2.up) 
-        {
-            spriteForwardVector = new Vector2(transform.position.x, transform.position.y + sprite.bounds.extents.y);
-        } else if (facingDirection == Vector2.left) 
-        {
-            spriteForwardVector = new Vector2(transform.position.x + -sprite.bounds.extents.x, transform.position.y);
-        } else if (facingDirection == Vector2.down) 
-        {
-            spriteForwardVector = new Vector2(transform.position.x, transform.position.y + -sprite.bounds.extents.y);
-        } else if (facingDirection == Vector2.right)  
-        {
-            spriteForwardVector = new Vector2(transform.position.x + sprite.bounds.extents.x, transform.position.y);
-        }        
-
-        return Physics2D.Raycast(spriteForwardVector, facingDirection, 5.0f);;
     }
 }
