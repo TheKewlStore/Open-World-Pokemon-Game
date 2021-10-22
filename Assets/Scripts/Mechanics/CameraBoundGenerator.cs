@@ -8,6 +8,7 @@ public class CameraBoundGenerator : MonoBehaviour {
     public Camera sceneCamera;
     public float worldBounds;
     public GameObject boundTestObject;
+    public GameObject cameraBoundVisualizer;
 
     private BoxCollider boxCollider;
 
@@ -25,6 +26,10 @@ public class CameraBoundGenerator : MonoBehaviour {
 
         if (boundTestObject != null) {
             boundTestObject.transform.localScale = new Vector3(cameraWidth - 1, cameraHeight - 1, 1);
+        }
+
+        if (cameraBoundVisualizer != null) {
+            cameraBoundVisualizer.transform.localScale = new Vector3(worldBounds - cameraWidth, worldBounds - cameraHeight, 1);
         }
     }
 
